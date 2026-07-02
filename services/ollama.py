@@ -1,7 +1,8 @@
 import requests
-from config import MODEL, OLLAMA_URL
+from config import GetModel, OLLAMA_URL
 
-def chat(message: str):
+def chat(version: int, message: str):
+	MODEL = GetModel(version)
 	instruction = "한글로 답하고 짧게 말한다."
 	res = requests.post(
                 f"{OLLAMA_URL}/api/chat",

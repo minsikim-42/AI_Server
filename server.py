@@ -9,8 +9,8 @@ def root():
 	return { "message": "Hello AI Server" }
 
 @app.post("/chat")
-def chat(request: ChatRequest):
-	response = ollama.chat(request.message)
+def chat(ver: int, request: ChatRequest):
+	response = ollama.chat(ver, request.message)
 	content = response["message"].get("content")
 	nyang_content = f"{content} 냥."
 	thinking = response["message"].get("thinking")
