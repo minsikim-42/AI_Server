@@ -1,30 +1,55 @@
+import json
 import requests
-from config import GetModel, OLLAMA_URL
+from config import OLLAMA_URL
+from models import ChatRequest
 
-def chat(version: int, message: str):
-	MODEL = GetModel(version)
-	instruction = "한글로 답하고 짧게 말한다."
-	res = requests.post(
+def chat(request: ChatRequest):
+    message = request.message
+    context_num = request.context or 2048
+    model = request.model or "qwen3:0.6b"
+
+    MODEL = model #GetModel(model)
+    instruction = "한글을 기본언어로 한다. 짧게 대답한다."
+    response = requests.post(
                 f"{OLLAMA_URL}/api/chat",
                 json={
                         "model": MODEL,
                         "messages": [
-				{
-                                	"role": "system",
-                                	"content": instruction
-                        	},
-				{
-					"role": "user",
-					"content": message
-				}
-			],
-                        "stream": False,
-			"options": {
-				"num_predict": 200,
-				"temperature": 0.7,
-				"top_p": 0.9
-			}
-	})
-	print(res.text)
-	data = res.json()
-	return data
+                {
+                                    "role": "system",
+                                    "content": instruction
+                            },
+                {
+                    "role": "user",
+                    "content": message
+                }
+            ],
+                        "stream": True,
+            "options": {
+                "num_predict": context_num,
+                "temperature": 0.7,
+                "top_p": 0.9
+            }
+    })
+    
+    # for line in response.iter_lines():
+    #     if not line:
+    #         continue
+
+    #     data = json.loads(line)
+
+    #     if "message" in data:
+    #         yield data["message"]["content"]
+            
+    for line in response.iter_lines():
+        if not line:
+            continue
+
+        data = json.loads(line)
+
+        message = data.get("message", {})
+
+        yield json.dumps({
+            "thinking": message.get("thinking", ""),
+            "content": message.get("content", "")
+        }) + "\n"

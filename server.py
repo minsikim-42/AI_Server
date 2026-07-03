@@ -1,21 +1,30 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 from services import ollama
 from models import ChatRequest
 
 app = FastAPI()
 
+# HTML/CSS/JS 설정
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
 @app.get("/")
-def root():
-	return { "message": "Hello AI Server" }
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {}
+    )
+
 
 @app.post("/chat")
-def chat(ver: int, request: ChatRequest):
-	response = ollama.chat(ver, request.message)
-	content = response["message"].get("content")
-	nyang_content = f"{content} 냥."
-	thinking = response["message"].get("thinking")
-	return {
-		"response": f"{nyang_content}\n(thinking){thinking}"
-	}
-
-
+def chat(request: ChatRequest):
+    return StreamingResponse(
+        ollama.chat(request),
+        media_type="text/plain"
+	)

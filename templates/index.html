@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>My AI Server</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 헤더 -->
+    <div class="header">
+        🤖 My AI Server
+    </div>
+
+    <!-- 채팅 영역 -->
+    <div id="chatBox" class="chat-box">
+
+        <div class="message ai">
+            <div class="thinking"></div>
+            <div class="content"></div>
+        </div>
+
+    </div>
+
+    <!-- 입력 영역 -->
+    <div class="input-area">
+
+        <input 
+            id="input"
+            type="text"
+            placeholder="메시지를 입력하세요..."
+        />
+
+        <button onclick="sendMessage()">➤</button>
+
+    </div>
+    <select id="modelSelect">
+        <option value="qwen3:0.6b">qwen3:0.6b (default)</option>
+        <option value="qwen3:8b">qwen3:8b</option>
+        <option value="qwen3:14b">qwen3:14b</option>
+        <option value="qwen3.6:35b-mlx">qwen3.6:35b-mlx</option>
+        <option value="test_error">test_error</option>
+    </select>
+    <select id="contextelect">
+        <option value=1024>1k</option>
+        <option value=2048>2k(default)</option>
+        <option value=8192>8k</option>
+        <option value=32768>32k</option>
+        <option value=65536>64k(느림)</option>
+        <option value=test_error>test_error</option>
+    </select>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

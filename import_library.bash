@@ -1,1 +1,1 @@
-uv pip install fastapi uvicorn requests
+uv pip install fastapi uvicorn requests jinja2
