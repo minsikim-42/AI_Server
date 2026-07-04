@@ -45,6 +45,29 @@ def chatHome(
         {}
     )
 
+def stream_chat(messages: list, request: ChatRequest):
+    answer = ""
+    thinking_process = ""
+
+    for line in ollama.chat(messages, request):
+
+        data = json.loads(line)
+
+        if data.get("thinking"):
+            thinking_process += data["thinking"]
+        if data.get("content"):
+            answer += data["content"]
+
+        # 브라우저에는 그대로 전달
+        yield line
+
+    # AI 답변 저장
+    conversation.add_message(
+        request.conversation_id,
+        "assistant",
+        answer,
+        thinking_process
+    )
 
 @app.post("/chat")
 # @limiter.limit("10/minute")
@@ -63,38 +86,31 @@ def chat(
     # 2) history 가져오기
     history = conversation.get_messages(request.conversation_id)
 
+    remove_thinking = [
+        {"role": msg["role"], "content": msg["content"]}
+        for msg in history
+            if "content" in msg
+    ]
+
     # 3) system prompt
     instruction = "한글을 기본으로 하고 짧게 답변한다."
 
     # 4) messages 구성 (핵심)
     messages = [
         {"role": "system", "content": instruction},
-        *history
+        *remove_thinking
     ]
     
-    print(messages)
+    print(f"chat request messages:\n{messages}")
     
     return StreamingResponse(
         stream_chat(history, request),
         media_type="text/plain"
 	)
 
-def stream_chat(messages: list, request: ChatRequest):
-    answer = ""
-
-    for line in ollama.chat(messages, request):
-
-        data = json.loads(line)
-
-        if data["content"]:
-            answer += data["content"]
-
-        # 브라우저에는 그대로 전달
-        yield line
-
-    # AI 답변 저장
-    conversation.add_message(
-        request.conversation_id,
-        "assistant",
-        answer
-    )
+@app.get("/chat/{conversation_id}/messages")
+def get_conversation_messages(conversation_id: int, request: Request):
+    conversation.ensure_conversation(conversation_id)
+    messages = conversation.get_messages(conversation_id)
+    print(messages)
+    return {"messages": messages}

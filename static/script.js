@@ -143,3 +143,49 @@ input.addEventListener("keyup", function (e) {
     e.preventDefault();
     sendMessage();
 });
+
+// 페이지 로드 시 1번 대화 내역 불러오기
+document.addEventListener("DOMContentLoaded", () => {
+    loadChatHistory(currentConversationId);
+});
+
+// 특정 대화의 내역을 서버에서 가져와 화면에 그리는 함수
+async function loadChatHistory(conversation_id) {
+    try {
+        const response = await fetch(`/chat/${conversation_id}/messages`);
+        const data = await response.json();
+        
+        // 메시지들을 순회하며 화면에 추가
+        data.messages.forEach(msg => {
+            if (msg.role === "user") {
+                addMessage("user", msg.content);
+            } else if (msg.role === "assistant") {
+                const aiMessage = document.createElement("div");
+                aiMessage.classList.add("message", "ai");
+
+                let innerHTML = "";
+
+                // 💡 만약 JSON에 저장된 thinking 데이터가 있다면 먼저 붙여줌
+                if (msg.thinking) {
+                    innerHTML += `
+                        <details class="thinking-box">
+                            <summary>🤔 Thinking</summary>
+                            <pre class="thinking">${msg.thinking}</pre>
+                        </details>
+                    `;
+                }
+
+                // 본문 텍스트 마크다운 처리해서 붙여줌
+                innerHTML += `<div class="content">${marked.parse(msg.content)}</div>`;
+                
+                aiMessage.innerHTML = innerHTML;
+                chatBox.appendChild(aiMessage);
+            }
+        });
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    } catch (error) {
+        console.error("대화 내역을 불러오는 중 오류 발생:", error);
+    }
+}

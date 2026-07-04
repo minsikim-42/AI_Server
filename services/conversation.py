@@ -54,7 +54,7 @@ def ensure_conversation(conversation_id):
     with open(f"{path}/messages.json", "w", encoding="utf-8") as f:
         json.dump([], f)
 
-def add_message(conversation_id, role, content):
+def add_message(conversation_id, role, content, thinking=""):
 
     path = f"{DATA_PATH}/{conversation_id}/messages.json"
 
@@ -63,7 +63,8 @@ def add_message(conversation_id, role, content):
 
     messages.append({
         "role": role,
-        "content": content
+        "content": content,
+        "thinking": thinking
     })
 
     with open(path, "w", encoding="utf-8") as f:
