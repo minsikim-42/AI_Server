@@ -71,15 +71,15 @@ body {
 }
 
 .sheader {
-    font-family: "Orbitron", "Pretendard", sans-serif;
-    letter-spacing: 1.5px;
-    
+    /* font-family: "Orbitron", "Pretendard", sans-serif; */
+    /* letter-spacing: 1.5px; */
+
     flex-shrink: 0;
     padding: 12px 5px;
     background: #80480b;
     border-bottom: 1px solid #444;
     font-weight: 600;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 .chat-box {
