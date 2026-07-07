@@ -5,8 +5,18 @@ from models import ChatRequest
 from services import tool_manager
 
 def chat(messages: list, request: ChatRequest):
+    print("=============/chat input messages===============")
+    print(json.dumps(messages, indent=2, ensure_ascii=False))
     print(f"request: {request}")
+    print("====================end======================")
     
+    prompt_tokens = 0
+    completion_tokens = 0
+    eval_time = 0
+    tok_per_sec = 0
+    total_duration = 0
+
+    tool_call_count = 0
     while (True):
         message = messages
         predict = request.predict or 2048
@@ -35,7 +45,7 @@ def chat(messages: list, request: ChatRequest):
                     stream=False
                 )
         
-        print(json.dumps(messages, indent=2, ensure_ascii=False))
+        # print(json.dumps(messages, indent=2, ensure_ascii=False))
                 
         # for line in response.iter_lines():
         #     if not line:
@@ -57,6 +67,15 @@ def chat(messages: list, request: ChatRequest):
         tool_calls = message.get("tool_calls")
 
         if tool_calls: # 툴 콜을 요청했다면
+            tool_call_count += 1
+            if tool_call_count > 2:
+                messages.append({
+                    "role": "system",
+                    "content": "추가 검색은 하지 말고 이미 검색된 결과만으로 답변하세요."
+                })
+                continue
+            
+            messages.append(message)
             call = tool_calls[0]
 
             tool_name = call["function"]["name"]
@@ -68,61 +87,90 @@ def chat(messages: list, request: ChatRequest):
                 tool_name,
                 arguments
             )
+            if tool_result is None:
+                print("결과가 None입니다.")
+                continue
+            print("================tool_result==================")
             print(tool_result)
+            print("====================end======================")
 
+            content = tool_result["content"]
+            if isinstance(content, (dict, list)):
+                content = json.dumps(content, ensure_ascii=False)
+            else:
+                content = str(content)
             messages.append({
                 "role": "tool",
                 "tool_name": tool_name,
                 "id": call["id"],
-                "content": json.dumps(
-                    tool_result["content"],
-                    ensure_ascii=False
-                )
+                "content": str(content)
             })
+            print("=============appended messages===============")
             print(json.dumps(messages, indent=2, ensure_ascii=False))
+            print("====================end======================")
+            
+            prompt_tokens += data.get(
+                "prompt_eval_count",
+                0
+            )
+            completion_tokens += data.get(
+                "eval_count",
+                0
+            )
+            eval_time += data.get(
+                "eval_duration",
+                0
+            ) / 1_000_000_000
+            total_duration += data.get(
+                "total_duration",
+                0
+            ) / 1_000_000_000
+            
             continue
         
+        print("===================data=======================")
         print(data["done_reason"])
         print(message.get("tool_calls"))
         print(json.dumps(data, indent=2, ensure_ascii=False))
+        print("====================end======================")
 
         yield json.dumps({
             "thinking": message.get("thinking", ""),
             "content": message.get("content", "")
         }) + "\n"
 
-        prompt_tokens = data.get(
+        prompt_tokens += data.get(
             "prompt_eval_count",
             0
         )
-
-        completion_tokens = data.get(
+        completion_tokens += data.get(
             "eval_count",
             0
         )
-
-
-        eval_time = data.get(
+        eval_time += data.get(
             "eval_duration",
             0
         ) / 1_000_000_000
-
-
         tok_per_sec = (
             completion_tokens / eval_time
             if eval_time > 0
             else 0
         )
+        total_duration += data.get(
+            "total_duration",
+            0
+        ) / 1_000_000_000
 
 
         print(
             f"""
-        =============
-        Input tokens : {prompt_tokens}
-        Output tokens: {completion_tokens}
-        Speed        : {tok_per_sec:.2f} tok/s
-        =============
-        """
+                =============
+                Input tokens  : {prompt_tokens}
+                Output tokens : {completion_tokens}
+                Tokens Speed  : {tok_per_sec:.2f} tok/s
+                Total duration: {total_duration:.1f}
+                =============
+            """
         )
 
         break

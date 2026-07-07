@@ -1,4 +1,5 @@
 def run(expression: str):
+    print("[Expression]:", expression)
     try:
         result = eval(expression)
         return str(result)

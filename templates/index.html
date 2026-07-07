@@ -11,51 +11,121 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Inter,"Segoe UI",Arial,sans-serif;
 }
 
 body{
-    height:100vh;
+    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#f3f4f6;
+    background:
+        radial-gradient(circle at top,#1b2735,#090a0f 70%);
+    color:#e6edf3;
 }
 
 .container{
-    text-align:center;
-    background:white;
-    padding:60px;
-    border-radius:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
-    min-width:420px;
+    width:700px;
+    background:#161b22;
+    border:1px solid #30363d;
+    border-radius:18px;
+    padding:50px;
+    box-shadow:
+        0 0 20px rgba(0,220,255,.08),
+        0 0 60px rgba(0,220,255,.04);
 }
 
 h1{
-    color:#2563eb;
-    margin-bottom:20px;
+    color:#00d8ff;
+    font-size:42px;
+    text-shadow:0 0 15px rgba(0,216,255,.5);
+    margin-bottom:15px;
 }
 
 p{
-    color:#555;
-    margin-bottom:40px;
-    line-height:1.6;
+    color:#9ca3af;
+    margin-bottom:35px;
+    line-height:1.7;
 }
 
 a{
     display:inline-block;
     text-decoration:none;
-    background:#2563eb;
-    color:white;
-    padding:14px 32px;
+    background:#00d8ff;
+    color:#0d1117;
+    padding:15px 34px;
     border-radius:10px;
-    font-size:18px;
-    transition:.2s;
+    font-weight:bold;
+    transition:.25s;
 }
 
 a:hover{
-    background:#1d4ed8;
-    transform:translateY(-2px);
+    background:#5cecff;
+    transform:translateY(-3px);
+    box-shadow:0 0 25px rgba(0,216,255,.6);
+}
+
+.update-box{
+    margin-top:45px;
+    text-align:left;
+}
+
+.update-box h2{
+    color:#00d8ff;
+    margin-bottom:20px;
+}
+
+.update-item{
+    background:#0d1117;
+    border:1px solid #30363d;
+    border-left:4px solid #00d8ff;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:16px;
+    transition:.2s;
+}
+
+.update-item:hover{
+    transform:translateX(4px);
+    border-left-color:#00ffb3;
+    box-shadow:0 0 18px rgba(0,216,255,.18);
+}
+
+.update-date{
+    display:inline-block;
+    background:#00d8ff22;
+    color:#00d8ff;
+    border:1px solid #00d8ff55;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.update-title{
+    display:block;
+    color:#ffffff;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.update-item ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.update-item li{
+    color:#b7c0cc;
+    padding:6px 0;
+}
+
+.update-item li::before{
+    content:"➜";
+    color:#00ffb3;
+    margin-right:10px;
 }
 </style>
 </head>
@@ -71,6 +141,28 @@ a:hover{
     </p>
 
     <a href="/chat">채팅 시작하기</a>
+    <br><br>
+    <div class="update-box">
+        <h2>📢 Update Notes</h2>
+
+        <div class="update-item">
+            <span class="update-date">2026.07.07(v1.0)</span>
+
+            <amu>Tool Calling 기능 추가</amu>
+            <ul>
+                <li>웹/뉴스 검색, 계산기, 현재시간 Tool 추가</li>
+                <li>스트리밍 기능 취소</li>
+            </ul>
+        </div>
+
+        <div class="update-item">
+            <span class="update-date">2026.07.05(v0.0)</span>
+            <amu>ai 서버 개방</amu>
+            <ul>
+                <li>이전 메세지 기억, Thinking On/Off, 스트리밍, 모텔/토큰 선택 기능</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 </body>

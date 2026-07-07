@@ -135,18 +135,40 @@ def chat(
     ]
 
     # 3) system prompt
-    instruction = "Answer briefly."
+    instruction = f"""
+        Before calling search or naver_news tools, determine whether the user's question depends on the current date or time.
+
+        If the query involves words such as:
+        - today
+        - now
+        - current
+        - latest
+        - yesterday
+        - tomorrow
+        - this week
+        - this month
+        - recently
+
+        or requires knowledge of the current date to construct an accurate search query,
+
+        you MUST call the current_time tool first.
+
+        Otherwise, call the search or news tool directly.
+    """
+    print("system prompt:", instruction)
 
     # 4) messages 구성 (핵심)
     messages = [
-        {"role": "system", "content": instruction},
+        {"role": "tool", "content": instruction},
         *remove_thinking
     ]
     
+
+
     print(f"chat request messages:\n{messages}")
     
     return StreamingResponse(
-        stream_chat(history, request, x_user_id),
+        stream_chat(messages, request, x_user_id),
         media_type="text/plain"
 	)
 
