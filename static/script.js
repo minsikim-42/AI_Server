@@ -163,11 +163,11 @@ input.addEventListener("keyup", function (e) {
 
 // =========================== 페이지 로드 시 불러오기 ==============================
 document.addEventListener("DOMContentLoaded", () => {
-    loadModels(); // 모델 불러오기
-    loadChatHistory(currentConversationId); // 대화내역
     document
         .getElementById("new-chat")
         .addEventListener("click", newChat); // 새로운 세션
+    loadModels(); // 모델 불러오기
+    loadChatHistory(currentConversationId); // 대화내역
     loadConversations();
 });
 
@@ -212,7 +212,7 @@ async function loadChatHistory(conversation_id) {
         chatBox.scrollTop = chatBox.scrollHeight;
 
     } catch (error) {
-        console.error("대화 내역을 불러오는 중 오류 발생:", error);
+        alert("대화 내역을 불러오는 중 오류 발생:", error);
     }
 }
 
@@ -220,19 +220,37 @@ async function loadChatHistory(conversation_id) {
 let currentConversationId = 1;
 
 async function newChat(){
+    try {
 
-    const response = await fetch("/conversation/new",{
-        method:"POST",
-        headers: getAuthHeaders()
-    });
+        const response = await fetch("/conversation/new",{
+            method:"POST",
+            headers: getAuthHeaders()
+        });
 
-    const data = await response.json();
+        console.log("status:", response.status);
 
-    currentConversationId = data.conversation_id;
-    addHistory(currentConversationId);
+        const data = await response.json();
 
-    chatBox.innerHTML =
-        '<div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>';
+        console.log("data:", data);
+
+        currentConversationId = data.conversation_id;
+
+        // localStorage.setItem(
+        //     "current_conversation_id",
+        //     currentConversationId
+        // );
+
+        addHistory(currentConversationId);
+
+        chatBox.innerHTML =
+            '<div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>';
+
+    }
+    catch(e){
+
+        console.error("new chat error:", e);
+
+    }
 }
 function addHistory(id){
 
