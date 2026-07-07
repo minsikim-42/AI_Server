@@ -193,3 +193,29 @@ def list_conversations(x_user_id: str = Header("default_user")):
 def new_conversation(x_user_id: str = Header("default_user")):
     new_id = conversation.create_conversation(x_user_id)
     return {"id": new_id}
+
+# 세션관리
+next_conversation_id = 1
+
+@app.post("/conversation/new")
+def new_conversation(x_user_id: str = Header("default_user")):
+    print("new chat requests")
+    
+    new_id = conversation.create_conversation(x_user_id)
+
+    return {
+        "conversation_id": new_id
+    }
+
+@app.get("/conversation/{conversation_id}")
+def get_conversation(
+    conversation_id:int,
+    x_user_id: str = Header("default_user")
+    ):
+
+    messages = conversation.get_messages(
+        x_user_id,
+        conversation_id
+    )
+
+    return messages

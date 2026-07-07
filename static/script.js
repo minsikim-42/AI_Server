@@ -19,8 +19,6 @@ function getAuthHeaders() {
     };
 }
 
-let currentConversationId = 1;
-
 let isGenerating = false;
 
 // 채팅 박스 가져오기
@@ -163,10 +161,14 @@ input.addEventListener("keyup", function (e) {
     sendMessage();
 });
 
-// 페이지 로드 시 불러오기
+// =========================== 페이지 로드 시 불러오기 ==============================
 document.addEventListener("DOMContentLoaded", () => {
     loadModels(); // 모델 불러오기
     loadChatHistory(currentConversationId); // 대화내역
+    document
+        .getElementById("new-chat")
+        .addEventListener("click", newChat); // 새로운 세션
+    loadConversations();
 });
 
 // 특정 대화의 내역을 서버에서 가져와 화면에 그리는 함수
@@ -175,6 +177,10 @@ async function loadChatHistory(conversation_id) {
         const response = await fetch(`/chat/${conversation_id}/messages`, {headers: getAuthHeaders()});
         const data = await response.json();
         
+        currentConversationId = conversation_id
+
+        chatBox.innerHTML =
+        '<div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>';
         // 메시지들을 순회하며 화면에 추가
         data.messages.forEach(msg => {
             if (msg.role === "user") {
@@ -210,6 +216,89 @@ async function loadChatHistory(conversation_id) {
     }
 }
 
+// ======================= 새로운 세션 =========================
+let currentConversationId = 1;
+
+async function newChat(){
+
+    const response = await fetch("/conversation/new",{
+        method:"POST",
+        headers: getAuthHeaders()
+    });
+
+    const data = await response.json();
+
+    currentConversationId = data.conversation_id;
+    addHistory(currentConversationId);
+
+    chatBox.innerHTML =
+        '<div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>';
+}
+function addHistory(id){
+
+    const history = document.querySelector(".history");
+
+    const item = document.createElement("div");
+
+    item.className = "history-item";
+
+    item.textContent = "새로운 대화" + id;
+
+    item.dataset.id = id;
+
+    item.onclick = () => {
+        loadChatHistory(id);
+    };
+
+    history.prepend(item);
+}
+
+// async function loadConversation(id){
+
+//     currentConversationId = id;
+
+//     const response = await fetch(`/conversation/${id}`,{
+//         headers: getAuthHeaders()
+//     });
+
+//     const messages = await response.json();
+
+
+//     chatBox.innerHTML = "";
+
+
+//     for(const msg of messages){
+
+//         const div = document.createElement("div");
+
+//         div.className =
+//             "message " + msg.role;
+
+//         div.textContent =
+//             msg.content;
+
+
+//         chatBox.appendChild(div);
+//     }
+// }
+async function loadConversations(){
+
+    const response = await fetch("/api/conversations", {
+        headers: getAuthHeaders()
+    });
+
+    const data = await response.json();
+
+    data.conversations.forEach(conv => {
+        addHistory(
+            conv.id,
+            conv.title
+        );
+    });
+}
+
+
+// ====================== 모델 불러오기 ======================
 async function loadModels() {
     // const modelSelect = document.getElementById("modelSelect");
     // if (!modelSelect) return;
@@ -244,3 +333,4 @@ async function loadModels() {
     //     modelSelect.innerHTML = `<option value="qwen3:0.6b">기본 모델 (연결 실패)</option>`;
     // }
 }
+

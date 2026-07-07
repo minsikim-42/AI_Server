@@ -12,70 +12,100 @@
 
 <body>
 
-<div class="container">
 
-    <!-- 헤더 -->
-    <div class="header">
-        SIKAI_PROJECT -AI Server-
-    </div>
-    <div class="sheader">
-        (*여러분의 채팅내역정보는 불안전하며 흥미롭게 제가 가져가져가겠습니다.☺️)
-        (익명성은 보장됩니다.)
-    </div>
-
-    <!-- 채팅 영역 -->
-    <div id="chatBox" class="chat-box">
-        <div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>
-    </div>
-
-    <div class="settings-area">
-
-    <div class="setting-item">
-        <label>🤖 Model</label>
-        <select id="modelSelect">
-            <option value="qwen3:0.6b" selected>qwen3:0.6b(장난감,개빠름)</option>
-            <!-- <option value="qwen3:0.6b">qwen3:4b</option> -->
-            <option value="qwen3:8b">qwen3:8b</option>
-            <!-- <option value="qwen3:14b">qwen3:14b(말이좀통하는듯)</option> -->
-            <!-- <option value="qwen3.6:35b-mlx">qwen3.6:35b-mlx(좋음,빠름)</option> -->
-        </select>
-    </div>
-
-    <div class="setting-item">
-        <label>📏 Max Tokens</label>
-        <select id="num_predict">
-            <option value="10">1(test)</option>
-            <!-- <option value="128">128</option> -->
-            <!-- <option value="256" selected>256</option> -->
-            <option value="512" selected>512(일반)</option>
-            <option value="1024">1k</option>
-            <option value="2048">2k(긴문장)</option>
-            <!-- <option value="4096">4k(3.6+think시에)</option>
-            <option value="8192">8k(그래도 부족하면..)</option> -->
-        </select>
-    </div>
-
-    <label class="switch">
-        <input type="checkbox" id="thinkCheck" checked>
-        <span class="slider"></span>
-        <span class="switch-text">Thinking</span>
-    </label>
-
+<!-- 헤더 -->
+<div class="header">
+    SIKAI_PROJECT -AI Server-
 </div>
+<div class="layout">
 
-    <!-- 입력 영역 -->
-    <div class="input-area">
-        <input
-            id="input"
-            type="text"
-            placeholder="메시지를 입력해주세요..."
-        >
-        <button id="sendButton" onclick="sendMessage()">➤</button>
-    </div>
+    <aside class="sidebar">
 
+        <div class="logo">
+            🤖 <br>
+            <span>sikai</span>
+        </div>
+
+        <button id="new-chat">
+            + 새로운 채팅
+        </button>
+
+        <div class="history">
+
+            <div class="history-item active">
+                
+            </div>
+
+        </div>
+
+    </aside>
+
+    <main class="content">
+
+        <!-- 기존 container -->
+        <div class="container">
+
+            <div class="sheader">
+                (*여러분의 채팅내역정보는 안전하지않으며 흥미롭게 제가 가져가겠습니다.☺️)
+                (익명성은 보장됩니다.)
+            </div>
+
+            <!-- 채팅 영역 -->
+            <div id="chatBox" class="chat-box">
+                <div class="message ai">안녕하세요! 무엇을 도와드릴까요?</div>
+            </div>
+
+            <div class="settings-area">
+
+            <div class="setting-item">
+                <label>🤖 Model</label>
+                <select id="modelSelect">
+                    <option value="qwen3:0.6b">qwen3:0.6b(장난감,개빠름)</option>
+                    <!-- <option value="qwen3:0.6b">qwen3:4b</option> -->
+                    <option value="qwen3:8b" selected>qwen3:8b</option>
+                    <!-- <option value="qwen3:14b">qwen3:14b(말이좀통하는듯)</option> -->
+                    <!-- <option value="qwen3.6:35b-mlx">qwen3.6:35b-mlx(좋음,빠름)</option> -->
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>📏 Max Tokens</label>
+                <select id="num_predict">
+                    <option value="10">1(test)</option>
+                    <!-- <option value="128">128</option> -->
+                    <!-- <option value="256" selected>256</option> -->
+                    <option value="512" selected>512(일반)</option>
+                    <option value="1024">1k</option>
+                    <option value="2048">2k(긴문장)</option>
+                    <!-- <option value="4096">4k(3.6+think시에)</option>
+                    <option value="8192">8k(그래도 부족하면..)</option> -->
+                </select>
+            </div>
+
+            <label class="switch">
+                <input type="checkbox" id="thinkCheck">
+                <span class="slider"></span>
+                <span class="switch-text">Thinking</span>
+            </label>
+
+        </div>
+
+            <!-- 입력 영역 -->
+            <button id="new-chat-btn">＋ 새로운 채팅</button>
+            <div class="input-area">
+                <input
+                    id="input"
+                    type="text"
+                    placeholder="메시지를 입력해주세요..."
+                >
+                <button id="sendButton" onclick="sendMessage()">➤</button>
+            </div>
+
+        </div>
+
+        <script src="/static/script.js"></script>
+
+    </main>
 </div>
-
-<script src="/static/script.js"></script>
-
 </body>
 </html>

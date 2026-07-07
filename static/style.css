@@ -21,10 +21,20 @@ body {
 
 /* ===== 레이아웃 ===== */
 
-.container {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
+.container{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    height:100%;
+}
+.layout{
+    display:flex;
+    height:100vh;
+}
+
+.content{
+    flex:1;
+    display:flex;
 }
 
 .header {
@@ -75,11 +85,11 @@ body {
     /* letter-spacing: 1.5px; */
 
     flex-shrink: 0;
-    padding: 12px 5px;
     background: #80480b;
     border-bottom: 1px solid #444;
     font-weight: 600;
-    font-size: 22px;
+    font-size: 20px;
+    line-height:1.1;
 }
 
 .chat-box {
@@ -321,58 +331,38 @@ select {
     color: white;
 }
 
+/* 세션창 */
+#new-chat-btn{
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #565869;
+    border-radius:8px;
+
+    background:transparent;
+    color:white;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+#new-chat-btn:hover{
+    background:#2b2c2f;
+}
 
 
+/* 세션 사이드바 */
+.sidebar{
+    width:260px;
+    flex-shrink:0;
 
+    display:flex;
+    flex-direction:column;
 
+    background:#202123;
+    border-right:1px solid #444;
 
-
-/* ===== 모바일 ===== */
-
-@media (max-width: 768px) {
-
-    body {
-        font-size: 16px;
-    }
-
-    .header {
-        font-size: 18px;
-        padding: 16px;
-    }
-
-    .chat-box {
-        padding: 12px;
-    }
-
-    .message {
-        max-width: 95%;
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .thinking {
-        font-size: 15px;
-    }
-
-    .thinking-box summary {
-        font-size: 15px;
-    }
-
-    .input-area {
-        padding: 10px;
-    }
-
-    .input-area input {
-        font-size: 16px;
-        padding: 14px;
-    }
-
-    .input-area button {
-        font-size: 16px;
-        min-width: 60px;
-    }
-
-    select {
-        font-size: 16px;
-    }
+    padding:16px;
 }
