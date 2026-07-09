@@ -11,5 +11,18 @@ uv venv
 ### 3. install import
 ./import_library_win.bat
 
-### 4. run
+### 4. config.py
+OLLAMA_URL = "http://localhost:11434"
+
+SERVER_MODE = "tailscale"
+# SERVER_MODE = "public" or "tailscale"
+# public is not active
+
+API_KEY = ""
+
+NAVER_CLIENT_ID = ""
+NAVER_CLIENT_SECRET = ""
+SERPER_API_KEY = ""
+
+### 5. run
 ./run_win.bat
