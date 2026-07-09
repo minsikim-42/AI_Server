@@ -1,0 +1,3 @@
+@echo off
+uv pip install fastapi uvicorn requests jinja2 slowapi ddgs
+pause
