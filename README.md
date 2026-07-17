@@ -34,6 +34,5 @@ ollama serve (you need to install model like 'ollama run qwen3:8b' or if you wan
 
 ### 6. view
 
-https://github.com/user-attachments/assets/1b18b8aa-758b-4de3-8bb1-fbc0f079bc06
-
+https://github.com/user-attachments/assets/dfb40466-813a-4067-80ba-8c6f6f664b3c
 
